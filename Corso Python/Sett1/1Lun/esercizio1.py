@@ -12,7 +12,7 @@ bool_s = input("Sai scrivere o no? (s/n)")=='s'
 
 print(x, y, nome, lettera, bool_s)
 
-a = int(input("\nInserisci il primo numero"))
-b = int(input("\nInserisci il secondo numero"))
+a = int(input("\nInserisci il primo numero intero"))
+b = int(input("\nInserisci il secondo numero intero"))
 
 print("Uguale? ", a==b)
