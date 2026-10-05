@@ -15,4 +15,4 @@ print(x, y, nome, lettera, bool_s)
 a = int(input("\nInserisci il primo numero intero"))
 b = int(input("\nInserisci il secondo numero intero"))
 
-print("Uguale? ", a==b)
+print("Uguale e maggiore di tre? ", a==b and b>3)
