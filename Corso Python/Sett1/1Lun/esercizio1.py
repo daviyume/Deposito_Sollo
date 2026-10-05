@@ -11,3 +11,8 @@ lettera = input("Inserisci una lettera: ")
 bool_s = input("Sai scrivere o no? (s/n)")=='s'
 
 print(x, y, nome, lettera, bool_s)
+
+a = int(input("\nInserisci il primo numero"))
+b = int(input("\nInserisci il secondo numero"))
+
+print("Uguale? ", a==b)
