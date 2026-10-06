@@ -13,7 +13,7 @@ sel = int(input("Quale lista vuoi selezionare? (1/2)"))
 
 #numero
 if sel == 1:
-    if input("Vuoi aggiungere o rimuovere un numero? (a/r)") == 'a':
+    if input("Vuoi aggiungere o rimuovere un numero? (a/r)").lower == 'a':
         aggiunta = input("Che numero vuoi aggiungere? ")
 
         print("1 -", len(numeri), ")")
@@ -25,7 +25,7 @@ if sel == 1:
         numeri.remove(numeri[pos])
 #parola
 else:
-    if input("Vuoi aggiungere o rimuovere una parola? (a/r)") == 'a':
+    if input("Vuoi aggiungere o rimuovere una parola? (a/r)").lower == 'a':
         aggiunta = input("Che parola vuoi aggiungere? ")
 
         print(" (1 -", len(parole), ")")
