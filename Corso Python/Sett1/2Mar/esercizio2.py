@@ -1,26 +1,40 @@
-#menu con un if e vari elif ed else finale per un menu con
-# aggiungi, modifica o elimina
+#2 liste. Una di numeri una di parole.
+#Chiedi quale lista usare, poi scegliere
+# se aggiungere o rimuovere un elemento.
+# Stampa lista.
 
-lista = [3, 7, 1, 9]
-#stampa lista
-print(lista)
-#stampa menu
-sel = int(input("Seleziona l'opzione: \nAggiungi [1]\nModifica [2]\nElimina[3]\n"))
+numeri = [5, 6, 1, 21]
+parole = ["elefante", "rosso", "scala", "giocare"]
 
-#logica risposta menu
-if(sel>0):
-    if(sel==1):
-        aggiunta = (input("Cosa vuoi aggiungere? "))
-        lista.insert(input("In che posizione? "), aggiunta)
-    elif(sel==2):
-        modifica = (input("Quale vuoi modificare? (0-", len(lista-1), "): "))
-        if modifica>=0 and modifica<lista:
-            lista[modifica]= input("Inserisci valore modificato: ")
-    elif(sel==3):
-        if input("Quale vuoi eliminare?  (0-", len(lista-1), "): ") > 0 and < len(lista)
+print(numeri)
+print(parole)
+
+sel = int(input("Quale lista vuoi selezionare? (1/2)"))
+
+#numero
+if sel == 1:
+    if input("Vuoi aggiungere o rimuovere un numero? (a/r)") == 'a':
+        aggiunta = input("Che numero vuoi aggiungere? ")
+
+        print("1 -", len(numeri), ")")
+        pos = int(input("Dove lo vuoi aggiungere?"))-1
+        numeri.insert(pos, aggiunta)
     else:
-        print("Errore.")
+        print("1 -", len(numeri), ")")
+        pos = int(input("Quale numero vuoi rimuovere?"))-1
+        numeri.remove(numeri[pos])
+#parola
 else:
-    print("Annullato.")
+    if input("Vuoi aggiungere o rimuovere una parola? (a/r)") == 'a':
+        aggiunta = input("Che parola vuoi aggiungere? ")
 
-print(lista)
+        print(" (1 -", len(parole), ")")
+        pos = int(input("Dove la vuoi aggiungere?"))-1
+        parole.insert(pos, aggiunta)
+    else:
+        print(" (1 -", len(parole), ")")
+        pos = int(input("Quale parola vuoi rimuovere?"))-1
+        parole.remove(parole[pos])
+
+print(numeri)
+print(parole)

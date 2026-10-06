@@ -2,8 +2,8 @@
 #nel else controllo automatico con valori default
 
 account = ["Mario", "Super", 200]
-
-if input("Sei ", account[0], " ", account[1], "? (s/n)") == "n":
+print("Sei ", account[0], " ", account[1], "? (s/n)")
+if input() == "n":
     #creazione account
     account[0] = input("Inserisci il tuo nome: ")
     account[1] = input("Inserisci il tuo cognome: ")
