@@ -1,5 +1,9 @@
 #5 operazioni. Con if, while e for, e ripetibile.
 
+xlist = []
+sommaplist = []
+sommadlist = []
+primolist = []
 
 while True:
     #1: numero positivo in input
@@ -10,17 +14,18 @@ while True:
             print("Non è positivo: riprova...")
 
     #2: stampa somma numeri pari da 1 a n con ciclo for e range
-    print("Stampa numeri pari")
+    print("Stampa somma numeri pari")
     sommap = 0
     for n in range(2, x+1, 2):
         sommap += n
     print(sommap)
 
     #3: stampa somma numeri dispari
-    print("Stampa numeri dispari")
+    print("Stampa somma numeri dispari")
     sommad = 0
     for n in range(1, x+1, 2):
         sommad += n
+                
     print(sommad)
 
     #4 if per primo
@@ -35,10 +40,15 @@ while True:
     else:
         print("Il numero non è primo")
 
-    print("Numero positivo: ", x)
-    print("Somma numeri pari: ", sommap)
-    print("Somma numeri dispari: ", sommap)
-    print("Primo? ", primo)
+    xlist.append(x)
+    sommaplist.append(sommap)
+    sommadlist.append(sommad)
+    primolist.append(primo)
+    
+    print("Lista numeri positivi: ", xlist)
+    print("Lista somme numeri pari: ", sommaplist)
+    print("Lista somme numeri dispari: ", sommadlist)
+    print("Lista primi: ", primolist)
 
     if bool(input("Vuoi continuare? Lascia vuoto per interrompere: ")) == False:
         break
