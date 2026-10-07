@@ -28,3 +28,24 @@ for x in lim:
 
 for i in range(12, 20, 2):
     print(i)
+
+#3 clausole dei cicli: break, continue e pass
+    while True:
+        if lim == "nave":
+            break #break esce
+        else:
+            pass #pass non fa nulla ed è per scopo organizzativo
+
+for x in lim:
+    if x == "a":
+        continue #passa alla nuova iterazione
+    print(x)
+
+#operatore * splat. Prende un iterabile e
+#  lo espande in elementi separati, che possono essere assegnati ad
+# un altro iterabile come una lista.
+numeri = [*range(1, 11)]
+print(numeri)
+
+listavuota = [*range(20)] #crea 20 celle facilmente
+print(listavuota)
