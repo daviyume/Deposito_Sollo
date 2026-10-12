@@ -31,10 +31,22 @@ class Garage:
         return self.capienza - len(self)
 
     def targavalida(self, inptarga):
-        if len(inptarga) == 7:
+
+            #check lunghezza
+            if len(inptarga) != 7:
+                return False
+
+            #check char
+            for i in range(0, len(inptarga), 1):
+                match i:
+                    case 0 | 1 | 5 | 6:
+                        if inptarga[i].isdigit():
+                            return False
+                    case 2 | 3 | 4:
+                        if inptarga[i].isalpha():
+                            return False
+
             return True
-        else:
-            return False
 
     def __call__ (self):
         return self.macchine
