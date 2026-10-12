@@ -18,7 +18,7 @@ while True:
     match sel.lower():
         case 'c':
             titolo = input("Inserisci il titolo: ")
-            autore = input("Inserisci l'autore ")
+            autore = input("Inserisci l'autore: ")
             pagine = input("Inserisci il numero di pagine: ")
             Libri.append(Libro(titolo, autore, pagine))
 
