@@ -17,7 +17,7 @@ class Elettrodomestico:
         self.__modello = modello
         self.__anno = anno #anno acquisto
         self.__guasto = guasto
-        self.__costo = 50
+        self.__costo = costo
 
     def getmarca(self):
         return self.__marca
@@ -27,7 +27,8 @@ class Elettrodomestico:
         return self.__anno
     def getguasto(self):
         return self.__guasto
-
+    def getcosto(self):
+            return self.__costo
         
 
     def setmarca(self):
@@ -62,13 +63,13 @@ class Elettrodomestico:
 
 class Lavatrice(Elettrodomestico):
 
-    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", costo=50, capacita =0, giri=0):
+    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", capacita =0, giri=0, costo=50):
         super().__init__(marca, modello, anno, guasto, costo) #richiamata super
         self.__capacita_kg = capacita
         self.__giricentrifuga = giri
 
     def stimacostobase(self):
-        costofinale = self.__costo
+        costofinale = self.getcosto()
         if self.__capacita_kg > 40:
             costofinale += 10
         elif self.__capacita_kg > 80:
@@ -78,27 +79,27 @@ class Lavatrice(Elettrodomestico):
 
 
 class Frigorifero(Elettrodomestico):
-    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", costo=50, litri=0, hafreezer=False):
+    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", litri=0, hafreezer=False, costo=50):
         super().__init__(marca, modello, anno, guasto, costo) #richiamata super
         self.__litri = litri
         self.__hafreezer = hafreezer
 
     def stimacostobase(self):
-        costofinale = self.__costo
-        if self.litri > 50:
+        costofinale = self.getcosto()
+        if self.__litri > 50:
             costofinale += 20
         if self.__hafreezer:
             costofinale += 40
         return costofinale
     
-class Forno():
-    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", costo=50, alim=0, vent=False):
+class Forno(Elettrodomestico):
+    def __init__ (self, marca="?", modello="?", anno=annocorrente, guasto="?", alim="gas", vent=False, costo=50):
             super().__init__(marca, modello, anno, guasto, costo) #richiamata super
-            self.__tipoalimentazione = alim
+            self.__alimentazione = alim
             self.__haventilazione = vent
 
     def stimacostobase(self):
-        costofinale = self.__costo
+        costofinale = self.getcosto()
         if self.__alimentazione == "elettrico":
             costofinale += 20
         if self.__haventilazione:
@@ -107,12 +108,14 @@ class Forno():
 
 
 class TicketRiparazione:
-    __stato = "aperto"
-    __note = []
-
-    def __init__ (self, id, Ed):
+    def __init__ (self, id, Ed, stato="aperto", note=[]):
         self.__id = id
         self.__elettrodomestico = Ed
+        self.__stato = stato
+        self.__note = note
+
+    def geted(self):
+        return self.__elettrodomestico
 
     def getstato(self):
         return self.__stato
@@ -131,11 +134,69 @@ class TicketRiparazione:
         costo = elettrodomestico.stimacostobase() + len(*vociextra)*10
         return costo
 
-#to do: Officina e metodi
-class Officina:
-    pass
+    def __str__(self):
+        string = "ID: "+str(self.__id)+" | Tipo elettrodomestico: "+ type(self.__elettrodomestico).__name__ +" | Stato: "+self.__stato
+        return string
 
-l1 = Lavatrice()
-print(l1.costo)
-l1.getmarca()
-l1.getmodello()
+#to do: Officina e metodi
+class Officina(Lavatrice, Frigorifero, Forno):
+    def __init__ (self, nome, tickets=[]):
+        self.__nome = nome
+        self.__tickets = tickets
+
+    def aggticket(self, ticket):
+        self.__tickets.append(ticket)
+    def rimticket(self, ticket):
+        self.__tickets.remove(ticket)
+    def stampaticketaperti(self):
+        for tic in self.__tickets:
+            if tic.getstato()=="aperto":
+                print(str(tic))
+                
+    def sommapreventivi(self):
+        somma=0
+        for tic in self.__tickets:
+            somma += tic.geted().stimacostobase()
+        return somma
+
+    def statistichepertipo(self):
+        lavatrici = 0
+        frigoriferi = 0
+        forni = 0
+        for tic in self.__tickets:
+            if isinstance(tic.geted(), Lavatrice):
+                lavatrici +=1
+            if isinstance(tic.geted(), Frigorifero):
+                frigoriferi +=1
+            if isinstance(tic.geted(), Forno):
+                forni +=1
+
+        print("Lavatrici in riparazione: ", lavatrici)
+        print("Frigoriferi in riparazione: ", frigoriferi)
+        print("Forni in riparazione: ", forni)
+        #alternativa è isinstance(oggetto, classe)
+
+off = Officina("Super")
+
+lava1 = Lavatrice("Sony", "2000", 2000, "Lenta", 50, 400)
+frieza = Frigorifero("Dragon Technologies", "Ball9001", 2012, "Surriscaldamento", 91, True)
+forno1 = Forno("Xiaomi", "f4", 2022, "Il forno si spegne da solo circa ogni 30 minuti.", "elettrico", True)
+
+ticket1 = TicketRiparazione(8000, lava1)
+off.aggticket(ticket1)
+off.stampaticketaperti()
+
+ticket2 = TicketRiparazione(2452, frieza, "aperto", ["pericoloso", "laser"])
+off.aggticket(ticket2)
+
+ticket3 = TicketRiparazione(6767, forno1)
+off.aggticket(ticket3)
+
+print("Somma preventivi: ", off.sommapreventivi())
+
+off.rimticket(ticket3)
+print("Somma preventivi: ", off.sommapreventivi())
+
+off.statistichepertipo()
+
+print(ticket2.getnote())
