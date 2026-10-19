@@ -13,20 +13,20 @@ def Crea():
     print("CREA")
     nome = input("Nome del file da creare: ")
     file = open(path+nome, "x")
-    file.close
+    file.close()
 
 def Modifica():
     nome = input("Nome del file da modificare: ")
     file = open(path+nome, "w")
     contenuto = input("Contenuto: ")
     file.write(contenuto)
-    file.close
+    file.close()
 
 def Leggi():
     nome = input("Nome del file da leggere: ")
     file = open(path+nome, "r")
     print(file.readline())
-    file.close
+    file.close()
 
 def Aggiungi():
     nome = input("Nome del file a cui aggiungere: ")
