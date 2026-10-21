@@ -16,7 +16,7 @@ testo = ""
 
 while True:
 
-    dosave = False
+    dosave = True
     print("Matrici: ", len(listamatrici))
     match input("Seleziona l'azione: [C] Crea  [E] Estrai sottomatrice  [T] Trasponi  [S] Somma\n  [M] Moltiplicazione  [N] Media  [R] Rimuovi  [P] Print  [X] Esci: ").lower():
         case 'c':
@@ -86,14 +86,16 @@ while True:
 
         case 'p':
             print(listamatrici)
+            dosave = False
 
         case 'x':
             break
 
         case _:
             print("Errore: azione sconosciuta.")
+            dosave = False
 
-    if not dosave:
+    if dosave:
         testo = str(listamatrici)
         saveFile(testo)
     if input("Vuoi continuare? (s/n): ").lower() == 'n':
