@@ -8,10 +8,11 @@ data = {
     'Città': ['Roma', 'Milano', 'Roma', 'Napoli', 'Milano', 'Roma', 'Napoli', 'Napoli']
 }
 
+#1 Creare DataFrame
 df = pd.DataFrame(data)
 print(df)
 
-#tot
+#2 Colonna Totale Vendite
 df['Totale Vendite'] = df['Quantità']*df['Prezzo Unitario']
 
 #dfg raggruppa i prodotti e li utilizza come indici.
@@ -25,9 +26,11 @@ print("DFG")
 
 # double brackets = dataframe with real column
 
-#4 Prodotto più venduto
+#3 Raggruppa per prodotto e calcola totale delle vendite
 dfgprod = df.groupby('Prodotto')[['Totale Vendite']].sum()
 print(dfgprod)
+
+#4 Prodotto più venduto
 #vendita massima
 print("\nVendita massima: ", dfgprod['Totale Vendite'].max())
 
@@ -46,6 +49,14 @@ dfgvenditegrandi = dfgprod[dfgprod['Totale Vendite'] > 600]
 print("Vendite grandi")
 print(dfgvenditegrandi)
 
+#7 Ordina DataFrame originale per totale vendite in ordine crescente
+dford = df
+#per accedere ai valori di una serie, senza []
+#default = True; inplace = True to update original DataFrame
+dford.sort_values(['Totale Vendite'], ascending=True, inplace=True)
+print("\nOrdinato per totale vendite in ordine crescente")
+print(dford)
+
 #8 Vendite per ogni città
-print("\nVendite per ogni città:\n")
+print("\nVendite per ogni città:")
 print(dfgcitta)
