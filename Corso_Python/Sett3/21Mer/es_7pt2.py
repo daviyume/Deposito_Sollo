@@ -5,7 +5,7 @@ import numpy as np
 folderpath = os.path.dirname(os.path.abspath(__file__))+"/"
 
 def saveFile(testo):
-    path = folderpath+"es7pt2testo.txt"
+    path = folderpath+"es_7pt2testo.txt"
     file = open(path, "w")
     file.write(testo)
         
