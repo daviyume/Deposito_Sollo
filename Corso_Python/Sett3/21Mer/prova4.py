@@ -13,7 +13,9 @@ df = pd.DataFrame(data)
 # Creazione della tabella pivot
 pivot_df = df.pivot_table(values='Vendite', index='Prodotto', columns='Città', aggfunc='sum')
 
+print("\nDEFAULT DATAFRAME\n")
 print(df)
+print("\nPIVOT\n")
 print(pivot_df)
 
 #values: valore di incrocio
@@ -23,4 +25,5 @@ print(pivot_df)
 
 #groupby raggruppa per prodotto e sceglie come sovrapporre i dati
 grouped_df = df.groupby('Prodotto').sum()
+print("\nGROUPED\n")
 print(grouped_df)

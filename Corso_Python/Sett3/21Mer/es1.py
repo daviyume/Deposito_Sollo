@@ -22,7 +22,14 @@ df = df.drop_duplicates()
 
 df['salario'].fillna(df['salario'].mean(), inplace=True)
 
-df['maggiorenne'] = df['eta'] >= 18
-#np.select(conditions, choices)
+
+df['categoria'] = pd.cut(
+    df['eta'],
+    bins=[0, 18, 65, 1000],
+    labels=['Giovane', 'Adulto', 'Senior']
+)
 
 print(df)
+
+file = open(newpath, "w")
+file.write(str(df))
