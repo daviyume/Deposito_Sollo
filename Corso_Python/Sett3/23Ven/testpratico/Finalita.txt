@@ -1,0 +1,21 @@
+
+candy-data.csv contiene, per ogni marca, informazioni riguardanti
+ il gusto della caramella e informazioni riguardanti un eventuale premio.
+ CORREZIONE: winpercent è statistica di vittoria di comparazione tra clienti,
+ mentre pricepercent è quanto costa in più rispetto alla caramella media.
+
+candy-vendite.csv contiene, per ogni marca, informazioni riguardanti
+ unità vendute in un anno (?), giacenza magazzino in giorni(?),
+ prezzo in euro al cliente per unità, costo all'azienda per unità,
+ budget speso al mese per le caramelle (?),
+ valutazione 1-5 stelle dai clienti, e infine l'area di vendita.
+
+Le colonne sugarpercent e winpercent sono scambiate per errore, e nel
+ nostro dataframe questi valori sono stati ripristinati.
+
+La finalità di questo test è di dimostrare
+ quali prodotti da un'azienda che vende snack dolci vendono più unità,
+ e vedere tra quelli quanti sono dolci al cioccolato, rappresentati in marroncino.
+
+ Dal grafico possiamo vedere quali dolci vendono di più, e il vincitore è Twix.
+ Notiamo anche che i dolci al cioccolato sono i più popolari.
