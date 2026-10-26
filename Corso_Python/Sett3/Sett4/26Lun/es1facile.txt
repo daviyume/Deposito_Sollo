@@ -1,0 +1,15 @@
+#es 1.2
+Obiettivo: classifica ciascun problema come
+ classificazione, regressione, clustering o rinforzo:
+(a) prevedere il voto finale (0–30) di uno studente
+REGRESSIONE
+(b) capire se una recensione è positiva o negativa
+CLASSIFICAZIONE
+(c) raggruppare canzoni con sonorità simili senza generi predefiniti
+CLUSTERING
+(d) insegnare a un drone ad atterrare
+RINFORZO
+(e) prevedere il numero di biciclette noleggiate in un'ora
+REGRESSIONE
+(f) riconoscere la cifra scritta a mano in un'immagine.
+RINFORZO
