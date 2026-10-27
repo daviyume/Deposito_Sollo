@@ -9,7 +9,7 @@ knc = KNeighborsClassifier(n_neighbors=4)
 #remove itself
 knc.fit(wines.data, wines.target)
 
-dist, idxs = knc.kneighbors(wines.data[100:101]) #must be 2d to select whole row
+dist, idxs = knc.kneighbors(wines.data[[100]]) #must be 2d to select whole row. To select row, [[]]
 dist = dist[:, 1:].round(2).ravel()
 idxs = idxs[:, 1:].ravel()
 #rimuovi 1o elemento
