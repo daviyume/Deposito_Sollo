@@ -5,6 +5,8 @@ from sklearn import metrics
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 
+from sklearn.metrics import classification_report
+
 iris = load_iris()
 
 X, y = iris.data, iris.target
@@ -15,8 +17,10 @@ knc.fit(X_train, y_train)
 
 y_pred = knc.predict(X_test)
 
+
 # Compare actual labels with predicted labels
-cm = metrics.confusion_matrix(y_test, y_pred)
+cm = metrics.confusion_matrix(y_test, y_pred, labels=None, sample_weight=None)
+#labels= istruzione come ordine dati, pesi campione
 
 # Display the confusion matrix
 plt.figure(figsize=(6, 4))
@@ -36,3 +40,8 @@ plt.tight_layout()
 plt.show()
 
 #LLM example
+
+#crea un report che mostra le statistiche principali della classificazione.
+print(classification_report(y_test, y_pred, labels = None, target_names= None,
+                             sample_weight = None, digits = 2, output_dict = False))
+
