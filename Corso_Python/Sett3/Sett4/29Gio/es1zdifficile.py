@@ -10,7 +10,7 @@ X, y = load_breast_cancer(return_X_y=True)
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=144)
 
-modelslist = [KNeighborsClassifier(n_neighbors=4), DecisionTreeClassifier(random_state=0)]
+modelslist = [KNeighborsClassifier(n_neighbors=5), DecisionTreeClassifier(random_state=0)]
 scalerslist = [StandardScaler(), MinMaxScaler(), RobustScaler()]
 
 for model in modelslist:
