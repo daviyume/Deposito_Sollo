@@ -23,6 +23,8 @@ from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, r
 import pandas as pd
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 bc = load_breast_cancer()
 X, y = bc.data, bc.target
 df = load_breast_cancer(as_frame=True).frame
@@ -147,10 +149,10 @@ knc.fit(X_train_s, y_train)
 
 #predict
 y_pred_train = knc.predict(X_train_s)
-y_pred = knc.predict(X_val_s)
+y_pred_val = knc.predict(X_val_s)
 
 acc_knc2_train = accuracy_score(y_train, y_pred_train)
-acc_knc2_val = accuracy_score(y_val, y_pred)
+acc_knc2_val = accuracy_score(y_val, y_pred_val)
 print("\nScaler MinMax")
 print("Punti Accuratezza KNC su train: ", acc_knc2_train)
 print("Punti Accuratezza KNC su val: ", acc_knc2_val)
@@ -161,3 +163,64 @@ print("Punti Accuratezza KNC su val: ", acc_knc2_val)
 
 #7 Scelta di k e diagnosi del modello
 print("\nSEZIONE 7")
+accs_train_k = []
+accs_val_k = []
+for k in range(1, 41+1, 2):
+    knc = KNeighborsClassifier(n_neighbors=k)
+    knc.fit(X_train_s, y_train)
+    y_pred_train = knc.predict(X_train_s)
+    y_pred_val = knc.predict(X_val_s)
+    accs_train_k.append(accuracy_score(y_train, y_pred_train))
+    accs_val_k.append(accuracy_score(y_pred_val, y_pred))
+    #print(accuracy_score(y_pred_val, y_pred), k)
+
+plt.plot(range(1, 41+1, 2), accs_train_k, label="Accuratezza su K (training)")
+plt.plot(range(1, 41+1, 2), accs_val_k, label="Accuratezza su K (val)")
+
+plt.xlabel("K")
+plt.ylabel("Accuratezza")
+plt.title("Accuratezza in base a K su train e val")
+plt.legend()
+
+plt.show()
+
+print("Dal grafico osserviamo che per il set val la zona di underfitting è meno di 5, mentre di overfitting più di 30")
+#ricaviamo k migliore dall'indice acc del val migliore.
+#raddoppia per saltare i pari, +1 perché k inizia da 1 e non 0
+best_result_index = accs_val_k.index(max(accs_val_k))
+best_k = (best_result_index)*2+1
+print("k migliore: ", best_k)
+
+#8 Secondo modello: albero di decisione
+depths = [1,2,3,5,8,None]
+dftree = pd.DataFrame(
+    index = depths
+)
+
+accs_train_tree = []
+accs_val_tree = []
+best_val_acc_tree = 0
+bestdepth = 0
+
+for d in depths:
+    dtc = DecisionTreeClassifier(max_depth=d)
+    dtc.fit(X_train, y_train)
+    
+    print(dtc.get_n_leaves()) #stampa foglie
+    y_pred_train = dtc.predict(X_train_s)
+    y_pred_val = dtc.predict(X_val_s)
+    print("Acc train: ", accuracy_score(y_train, y_pred_train))
+    print("Acc val: ", accuracy_score(y_pred_val, y_pred))
+    accs_train_tree.append(accuracy_score(y_train, y_pred_train))
+    accs_val_tree.append(accuracy_score(y_pred_val, y_pred))
+
+    if accuracy_score(y_pred_val, y_pred) > best_val_acc_tree:
+        bestdepth = d
+
+dftree['Acc in train'] = accs_train_tree
+dftree['Acc in val'] = accs_train_tree
+
+print(dftree)
+print("La scelta migliore è ", bestdepth, " perché raggiunge il risultato migliore per val con la profondità minore.")
+
+#...
