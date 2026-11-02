@@ -249,7 +249,7 @@ frazioni = np.bincount(bc.target) / len(bc.target)
 print("\nIndice Gini manuale")
 print(round(1-(frazioni**2).sum(), 3))
 print("\nIndice Gini funzione")
-print(round(dtc.tree_.impurity[0], 3)) #classe principale, numero classi
+print(round(dtc.tree_.impurity[0], 3)) #classe principale
 
 print("\n Il risultato non cambia in base allo scaling perché tree si basa su domande non basate su distanze ma su domande booleane.")
 
