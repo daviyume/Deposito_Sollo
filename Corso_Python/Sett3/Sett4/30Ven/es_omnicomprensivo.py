@@ -14,16 +14,20 @@ print("Questo è un problema di classificazione, dove andiamo ad utilizzare un m
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split
 from sklearn.dummy import DummyClassifier
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier, export_text, plot_tree
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score, classification_report
 
 import pandas as pd
 import numpy as np
 
+import matplotlib
+matplotlib.use('QtAgg')  # Switch UI
 import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 bc = load_breast_cancer()
 X, y = bc.data, bc.target
@@ -51,8 +55,9 @@ print("Feature min: V\n", dfmin)
 ###3 Divisione dei dati
 #split 60-20-20 (train, val, test)
 print("\nSEZIONE 3")
-X_temp, X_test, y_temp, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
-X_train, X_val, y_train, y_val = train_test_split(X_temp, y_temp, train_size=0.75, random_state=42, stratify=y_temp)
+#final_train è riservato nella sua completezza per il test finale
+X_final_train, X_test, y_final_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+X_train, X_val, y_train, y_val = train_test_split(X_final_train, y_final_train, train_size=0.75, random_state=42, stratify=y_final_train)
 
 print("Dimensioni train: ", X_train.shape[0])
 print("Dimensioni valutazione: ", X_val.shape[0])
@@ -94,7 +99,7 @@ print("Distanze dei vicini a "+str(idx)+": "+str(dists))
 print("Indici dei vicini a "+str(idx)+": "+str(idxs))
 print("Classi dei vicini a "+str(idx)+": "+str(y_train[idxs]))
 
-X_maxs = X.max(axis=0) #calculates going down rows. axis=1 calculates going across columns.
+X_maxs = X.max(axis=0) #calcola andando giù le righe. axis=1 calcola andando per colonne.
 X_mins = X.min(axis=0)
 
 scales = X_maxs - X_mins
@@ -110,7 +115,7 @@ print("\nSEZIONE 6")
 
 scaler = StandardScaler()
 
-X_train_s = scaler.fit_transform(X_train) #train on X_train and transform
+X_train_s = scaler.fit_transform(X_train) #train on X_train & transform
 X_val_s = scaler.transform(X_val) #transform X_val & X_test
 X_test_s = scaler.transform(X_test)
 
@@ -139,12 +144,13 @@ print("Punti Accuratezza KNC su val (scorsi): ", acc_knc1_val)
 #confronto con MinMaxScaler
 scaler = MinMaxScaler()
 
-#transform again
+#transform di nuovo
 X_train_s = scaler.fit_transform(X_train)
 X_val_s = scaler.transform(X_val)
 #X_test_s = scaler.transform(X_test)
 
 #allena
+knc = KNeighborsClassifier(n_neighbors=5)
 knc.fit(X_train_s, y_train)
 
 #predict
@@ -200,7 +206,7 @@ dftree = pd.DataFrame(
 accs_train_tree = []
 accs_val_tree = []
 best_val_acc_tree = 0
-bestdepth = 0
+best_depth = 0
 
 for d in depths:
     dtc = DecisionTreeClassifier(max_depth=d)
@@ -210,17 +216,129 @@ for d in depths:
     y_pred_train = dtc.predict(X_train_s)
     y_pred_val = dtc.predict(X_val_s)
     print("Acc train: ", accuracy_score(y_train, y_pred_train))
-    print("Acc val: ", accuracy_score(y_pred_val, y_pred))
+    print("Acc val: ", accuracy_score(y_val, y_pred_val))
     accs_train_tree.append(accuracy_score(y_train, y_pred_train))
-    accs_val_tree.append(accuracy_score(y_pred_val, y_pred))
+    accs_val_tree.append(accuracy_score(y_val, y_pred_val))
 
     if accuracy_score(y_pred_val, y_pred) > best_val_acc_tree:
-        bestdepth = d
+        best_depth = d
 
 dftree['Acc in train'] = accs_train_tree
 dftree['Acc in val'] = accs_train_tree
 
 print(dftree)
-print("La scelta migliore è ", bestdepth, " perché raggiunge il risultato migliore per val con la profondità minore.")
+print("La scelta migliore è ", best_depth, " perché raggiunge il risultato migliore per val con la profondità minore.")
 
 #...
+print("\nEXPORT TEXT")
+print(export_text(dtc, feature_names=bc.feature_names))
+
+plt.figure(figsize=(18, 12))
+plot_tree(dtc, feature_names= bc.feature_names,
+          class_names= bc.target_names,
+          filled=True,
+          fontsize=10,
+          precision=2
+        )
+plt.tight_layout()
+plt.show()
+
+#conta occorrenze positive di serie di numeri e lo divide per quantità
+#indice gini indica impurità (presenza di altre classi)
+frazioni = np.bincount(bc.target) / len(bc.target)
+print("\nIndice Gini manuale")
+print(round(1-(frazioni**2).sum(), 3))
+print("\nIndice Gini funzione")
+print(round(dtc.tree_.impurity[0], 3)) #classe principale, numero classi
+
+print("\n Il risultato non cambia in base allo scaling perché tree si basa su domande non basate su distanze ma su domande booleane.")
+
+print("Riaddestramento tree con feature scalate e con bestdepth ", best_depth)
+print("SCALATO")
+dtc_s = DecisionTreeClassifier(max_depth=best_depth)
+dtc_s.fit(X_train_s, y_train)
+
+print("Acc train: ", accuracy_score(y_train, dtc_s.predict(X_train_s)))
+print("Acc val: ", accuracy_score(y_val, dtc_s.predict(X_val_s)))
+
+print("\nNON SCALATO")
+dtc = DecisionTreeClassifier(max_depth=best_depth)
+dtc.fit(X_train, y_train)
+
+print("Acc train: ", accuracy_score(y_train, dtc.predict(X_train)))
+print("Acc val: ", accuracy_score(y_val, dtc.predict(X_val)))
+
+#9 Valutazione finale
+scaler = MinMaxScaler()
+
+#unisci train e val e trasforma
+X_final_train_s = scaler.fit_transform(X_final_train)
+X_test_s = scaler.transform(X_test)
+
+#riaddestra con bestk e bestdepth
+knc = KNeighborsClassifier(n_neighbors=best_k)
+dtc = DecisionTreeClassifier(max_depth=best_depth)
+dummy = DummyClassifier(strategy="stratified")
+
+modelslist = [knc, dtc, dummy]
+
+lowest_fn = len(X_test)
+best_model = None
+
+print(lowest_fn)
+
+print("\n\nCONFRONTO 3 MODELLI")
+for model in modelslist:
+    print("\nMODEL: ", str(model))
+    model.fit(X_final_train_s, y_final_train)
+    y_pred = model.predict(X_test_s)
+    print("Accuracy score: ", accuracy_score(y_test, y_pred))
+    print("Precision score: ", precision_score(y_test, y_pred, pos_label=0, zero_division=0))
+    print("Recall score: ", recall_score(y_test, y_pred, pos_label=0, zero_division=0))
+    print("F1 score: ", f1_score(y_test, y_pred, pos_label=0, zero_division=0))
+
+    print("\nClassification report.\n", classification_report(y_test, y_pred, target_names= bc.target_names))
+    #classification report indica pos_label 0 (perché 0 ha valore maligno cioè positivo).
+    # target_names per visualizzare i nomi delle classi assegnate.
+
+    plt.figure()
+    cm = confusion_matrix(y_test, y_pred)
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt='d',
+        cmap='Blues',
+        xticklabels= bc.target_names,
+        yticklabels= bc.target_names
+    )
+    plt.xlabel('Predicted class')
+    plt.ylabel('Actual class')
+    plt.title("Breast cancer Confusion Matrix per "+str(model))
+    plt.tight_layout()
+    plt.show()
+
+    #scegliamo il migliore secondo il criterio clinico
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+    if fn < lowest_fn:
+        lowest_fn = fn
+        best_model = model
+
+    #prova calcolo
+    #precision (how many positive are true)
+    prec = tp / (tp+fp)
+    #recall (how many positives found)
+    recall = tp / (tp + fn)
+    print("Precision manuale: ", prec)
+    print("Recall manuale: ", recall)
+
+
+print("Il modello migliore calcolato è ", best_model, ".")
+print("E' stato scelto dal calcolo perché ha meno falsi negativi rispetto agli altri modelli,")
+print(" il che soddisfa il criterio clinico per cui è stato scelto.")
+print("Questo è indicato anche dallo score recall alto. Comunque, è importante")
+print("che il modello sia capace di prevedere anche i casi negativi e non solo trovare quelli positivi,")
+print("sennò avremmo scelto un modello che dice sempre che il caso sia positivo, con recall 1.0.")
+print("Ma il modello scelto come il migliore, ovvero KNC, ha uno score F1 abbastanza alto.")
+print("Dunque, anche se non è perfetto, è quello che lascia meno falsi negativi senza")
+print("sacrificare lo scopo della classificazione.")
+
