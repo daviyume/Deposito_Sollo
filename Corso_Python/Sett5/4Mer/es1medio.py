@@ -41,6 +41,7 @@ ax[1].set_xticks(ks)
 ax[1].set_ylabel("Silhouette score")
 plt.show()
 
+# risultato: 2 dei fiori sono più simili tra loro
 
 ####
 import pandas as pd
