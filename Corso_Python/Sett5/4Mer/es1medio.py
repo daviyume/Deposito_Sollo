@@ -42,6 +42,8 @@ ax[1].set_ylabel("Silhouette score")
 plt.show()
 
 # risultato: 2 dei fiori sono più simili tra loro
+# la soluzione migliore per k è per 3, o in alternativa 5 o 2, perché
+# elbow si abbassa a 3 circa e la silhouette è ancora alta.
 
 ####
 import pandas as pd
